@@ -66,9 +66,6 @@
 
             <!-- Liste expériences pro -->
             <div class="card-container" v-else-if="choixonglet == 'Expérience'">
-                <div class="img-container">
-                    <img class="img-responsive" alt="Photo de moi" href="moi.JPG">
-                </div>
                 <div class="card neon-card" v-for="experience in experiences">
                     <div class="card-text">
                         <h4>Nom du poste : {{ experience.poste }}</h4>
@@ -82,10 +79,7 @@
 
             <!-- Liste loisirs perso / activité extra-pro -->
             <div class="card-container" v-else-if="choixonglet == 'A propos'">
-                <div class="img-container">
-                    <img class="img-responsive" alt="Loisir" href="arc_a_poulie.jpg">
-                </div>
-                <div class="card neon-card" v-for="loisir in loisirs">
+                <div class="card neon-card" v-for="loisir in loisirs" style="width: 25%;">
                     <div class="card-text">
                         <h4>Activité pratiquer : {{ loisir.nom }}</h4>
                         <p>Durée : {{ loisir.durée }}</p>
