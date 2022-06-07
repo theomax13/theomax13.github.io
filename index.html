@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Portfolio</title>
+
+    <!-- Link -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css"integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous" />
+    <link rel="stylesheet" href="style.css" />
+    <link rel="stylesheet" href="button.css" />
+
+    <!-- Script -->
+    <script src="https://kit.fontawesome.com/dc30cb76a3.js" crossorigin="anonymous"></script>
+    
+</head>
+
+<body>
+    <div id="app">
+
+        <!-- Bouton contact -->
+        <div id="contact">
+            <a v-if="choixonglet.length == 0" id="buttonContact" class="neon-button" v-on:click="contact">
+                Contact
+            </a>
+        </div>
+
+        <!-- Fleche de retour en SVG -->
+        <div v-if="choixonglet.length > 0" class="flecheRetourdiv">
+            <a v-on:click="retour" class="flecheRetourdiv">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512" id="flecheRetour">
+                    <path fill="hsl(317 100% 54%)"
+                        d="M447.1 256C447.1 273.7 433.7 288 416 288H109.3l105.4 105.4c12.5 12.5 12.5 32.75 0 45.25C208.4 444.9 200.2 448 192 448s-16.38-3.125-22.62-9.375l-160-160c-12.5-12.5-12.5-32.75 0-45.25l160-160c12.5-12.5 32.75-12.5 45.25 0s12.5 32.75 0 45.25L109.3 224H416C433.7 224 447.1 238.3 447.1 256z" />
+                </svg>
+            </a>
+        </div>
+
+        <!-- Foreach avec chaque bouton (nav) -->
+        <div class="container">
+            <div class="row" v-if="choixonglet == ''">
+                <div class="buttononglet" v-for="onglet in onglets">
+                    <p class="jumbotron">
+                        <a v-on:click="boutonmenu(onglet)" class="neon-button">{{ onglet }}</a>
+                    </p>
+                </div>
+            </div>
+
+            <!-- Liste projets -->
+            <div class="card-container" v-if="choixonglet == 'Projets'">
+                <div class="card neon-card" v-for="projet in projets">
+                    <div class="img-container">
+                        <img class="img-responsive" v-bind:src="projet.img"
+                            alt="Image des différents site que j'ai créer" />
+                    </div>
+                    <div class="card-text">
+                        <h4>Nom du projet : {{ projet.nom }}</h4>
+                        <p>Description : {{ projet.description }}</p>
+                        <span>Technologie utilisée : {{ projet.techno }} <br /></span>
+                        <small>Lien du site : <br />{{ projet.liensite }}<br /></small>
+                        <small>Lien du projet : {{ projet.lienprojet }}</small>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Liste expériences pro -->
+            <div class="card-container" v-else-if="choixonglet == 'Expérience'">
+                <div class="img-container">
+                    <img class="img-responsive" alt="Photo de moi" v-bind:src="">
+                </div>
+                <div class="card neon-card" v-for="experience in experiences">
+                    <div class="card-text">
+                        <h4>Nom du poste : {{ experience.poste }}</h4>
+                        <p>Nom de l'entreprise : {{ experience.entreprise }}</p>
+                        <p>Adresse : {{ experience.adresse}}</p>
+                        <span>Durée : {{ experience.durée}}</span>
+                        <p>Date : {{ experience.date }}</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Liste loisirs perso / activité extra-pro -->
+            <div class="card-container" v-else-if="choixonglet == 'Mes loisirs'">
+                <div class="img-container">
+                    <img class="img-responsive" alt="Loisir" v-bind:src="">
+                </div>
+                <div class="card neon-card" v-for="loisir in loisirs">
+                    <div class="card-text">
+                        <h4>Activité pratiquer : {{ loisir.nom }}</h4>
+                        <p>Durée : {{ loisir.durée }}</p>
+                        <p>Ce que j'y est appris : {{ loisir.retenu}}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Formulaire de contact -->
+        <div class="containerForm neon-card" v-if="choixonglet == 'Contact'">
+            <h1>Formulaire de contact</h1>
+            <form id="contact-form">
+                <!--TODO Faire fonctionner le form pour l'envoie de mail-->
+                <input type="hidden" name="contact_number" />
+                <label for="fname">Nom & prénom / Société</label>
+                <input type="text" id="fname" name="firstname" placeholder="Votre nom et prénom ou société" />
+
+                <label for="sujet">Sujet</label>
+                <input type="text" id="sujet" name="sujet" placeholder="L'objet de votre message" />
+
+                <label for="emailAddress">Email</label>
+                <input id="emailAddress" type="email" name= "email" placeholder="Votre email" />
+
+                <label for="message">Message</label>
+                <textarea id="message" name="message" placeholder="Votre message" style="height: 200px"></textarea>
+
+                <input type="submit" value="Envoyer" />
+            </form>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+
+    <script>
+        var app = new Vue({
+            el: "#app",
+            data: {
+                onglets: ["Projets", "Expérience", "A propos"],
+                choixonglet: [],
+                projets: [
+                    {
+                        id: 1,
+                        nom: "Scanner d'empreinte digitale",
+                        description:
+                            "Scanner d'empreinte digitale non fonctionnel créer comme entrainement au animation css",
+                        techno: "CSS",
+                        img: "img/scan-empreinte.PNG",
+                        liensite: "https://theomax13.github.io/Site_scan_empreinte/",
+                        lienprojet: "https://github.com/theomax13/theomax13.github.io/tree/main/Site_scan_empreinte",
+                    },
+                    {
+                        id: 2,
+                        nom: "Immo-CEFii",
+                        description: "Site de gestion et de location immobilière",
+                        techno: "PHP",
+                        img: "img/immo-ceffii.png",
+                        liensite: "http://theomax13.infinityfreeapp.com/",
+                        lienprojet: "Non disponible",
+                    },
+                ],
+                experiences: [
+                    {
+                        id: 1,
+                        poste: "Stagiaire en Administration des ventes",
+                        entreprise: "ATOS",
+                        adresse: "357 avenue Patton 49000 ANGERS",
+                        durée: "3 jours",
+                        date: "Novembre 2016",
+                    },
+                    {
+                        id: 2,
+                        poste: "Stagiaire monteur mécanique",
+                        entreprise: "FEDD",
+                        adresse: "Les Maîmes  24510 Saint-Alvère",
+                        durée: "15 jours",
+                        date: "Juillet 2017",
+                    },
+                    {
+                        id: 3,
+                        poste: "Homme de ménage",
+                        entreprise: "SCI THECLANOE immobilier",
+                        adresse: "77140 St-Pierre-Lès-Nemours",
+                        durée: "2 mois",
+                        date: "Août - Septembre 2017",
+                    },
+                    {
+                        id: 4,
+                        poste: "Monteur mécanique",
+                        entreprise: "FEDD",
+                        adresse: "Les Maîmes  24510 Saint-Alvère",
+                        durée: "2 mois",
+                        date: "4 juillet - 31 août 2018",
+                    },
+                    {
+                        id: 5,
+                        poste: "Joker",
+                        entreprise: "Blanc Transports Vehicules - BTV",
+                        adresse: "1 Av. de l'Europe, 31620 Castelnau-d'Estrétefonds",
+                        durée: "2 mois",
+                        date: "5my juillet - 25 septembre",
+                    }
+                ],
+                loisirs: [
+                    {
+                        id: 1,
+                        nom: "Tir à l'arc",
+                        durée: "7 ans",
+                        retenu: "Ce que j'aime et que je retient de ce sport c'est la rigeur et la demande de concentration importante qui en font un sport très technique.",
+                    },
+                    {
+                        id: 2,
+                        nom: "VTT",
+                        durée: "7 ans",
+                        retenu: "J'apprecie le vtt pour son coté exploration et découverte ainsi que sont conté fun et impressionant lors de grands saut ou de descente ardu.",
+                    },
+                    {
+                        id: 3,
+                        nom: "Lecture de manga/webtoon",
+                        durée: "3 ans",
+                        retenu: "J'adore lire des manga depuis tout petit mais depuis 3 ans j'ai vraiment commencer a diversifier ma culture littéraire das cette branche. Ce que j'aime tout particulièrement sont les manga d'arts martiaux ou les personnes font preuve de motivation et repousse leur limite afin de progresser dans leur cultivation. Cela m'as également permis de m'améliorer en anglais car la plupart des scan ne sont pas disponible en français.",
+                    },
+                    {
+                        id: 4,
+                        nom: "Jeux Vidéo",
+                        durée: "12 ans",
+                        retenu: "J'ai toujours aimer tout ce qui touche a l'informatique c'est donc naturellement que je me suis vite dirigée vers le coté fun des ordinateurs c'est à dire les jeux vidéo. Ce que je retient de toute mes heures passé a 'gamer' sont les qualités suivantes : La concentration avec les fps (jeux de tir à la première personne) ainsi que la créativité avec minecraft ",
+                    },
+                ],
+            },
+            methods: {
+                boutonmenu: function (onglet) {
+                    this.choixonglet.push(onglet);
+                },
+                contact: function () {
+                    this.choixonglet.push("Contact");
+                    document.getElementById("buttonContact").style.display = "none";
+                },
+                retour: function () {
+                    this.choixonglet.splice(0);
+                },
+            },
+        });
+
+        const projets = [];
+    </script>
+</body>
+
+</html>
